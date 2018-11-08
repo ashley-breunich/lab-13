@@ -8,6 +8,7 @@ export default (req, res, next) => {
 
     let auth = {};
     let authHeader = req.headers.authorization;
+    let base64header = authHeader.replace(/Basic)
 
     // BASIC Auth
     if(authHeader.match(/basic/i)) {

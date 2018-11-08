@@ -1,11 +1,13 @@
 'use strict';
 
 import mongoose from 'mongoose';
+import bcrypt from 'bcrypt';
+// talks with database - facade
 
 const userSchema = new mongoose.Schema({
   username: {type: String, required: true, unique: true},
   password: {type: String, required: true},
-  email: {type: String}
+  email: {type: String},
 });
 
 // Before we save, use bcrypt to hash the plain text password and then call next()
