@@ -21,7 +21,8 @@ authRouter.post('/signup', (req, res, next) => {
 
 authRouter.post('/signin', auth, (req, res, next) => {
   res.cookie('auth', req.token);
-  res.send(req.token);
+  res.send('OK');
+  // res.send(req.token);
 });
 
 export default authRouter;

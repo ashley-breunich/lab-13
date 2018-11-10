@@ -2,6 +2,7 @@
 
 import mongoose from 'mongoose';
 import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
 // talks with database - facade
 
 const userSchema = new mongoose.Schema({
@@ -29,12 +30,13 @@ userSchema.pre('save', function(next) {
 userSchema.statics.authenticateBasic = function(auth) {
   let query = {username:auth.username};
   return this.findOne(query)
+    // might need to change this 1:08
     .then(user => user && user.comparePassword(auth.password))
     .catch(error => error);
 };
 
 userSchema.statics.authenticateToken = function(token) {
-  let parsedToken = jwt.verify(token);
+  let parsedToken = jwt.verify(token, process.env.SECRET || 'changeme');
   let query = {_id:parsedToken.id};
   return this.findOne(query)
     .then(user => {
@@ -45,7 +47,8 @@ userSchema.statics.authenticateToken = function(token) {
 
 // Compare a plain text password against the hashed one we have saved
 userSchema.methods.comparePassword = function(password) {
-  return bcrypt.compare(password, this.password);
+  return bcrypt.compare(password, this.password)
+    .then(valid => valid ? this : null);
 };
 
 // Generate a JWT from the user id and a secret
@@ -53,7 +56,7 @@ userSchema.methods.generateToken = function() {
   let tokenData = {
     id:this._id,
   };
-  return jwt.sign(tokenData, process.env.SECRET || 'changeit' );
+  return jwt.sign(tokenData, process.env.SECRET || 'changeme' );
 };
 
 export default mongoose.model('users', userSchema);
