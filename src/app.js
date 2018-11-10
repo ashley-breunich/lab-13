@@ -13,6 +13,7 @@ import errorHandler from './middleware/error.js';
 import notFound from './middleware/404.js';
 import apiRouter from './api/v1.js';
 import authRouter from './auth/router.js';
+import auth from './auth/middleware.js';
 
 // Prepare the express app
 const app = express();
@@ -28,6 +29,9 @@ app.use(express.urlencoded({extended:true}));
 app.use(authRouter);
 app.get('/', (req,res) => {
   res.send('hello!!!');
+});
+app.get('/api/v1/:model/schema', auth, (req,res) => {
+  res.send('this is the schema!!!');
 });
 app.use(apiRouter);
 
