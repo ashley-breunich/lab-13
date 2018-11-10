@@ -3,7 +3,7 @@
 import express from 'express';
 
 import modelFinder from '../middleware/model-finder.js';
-import auth from './auth/middleware.js';
+import auth from '../auth/middleware.js';
 
 const router = express.Router();
 
